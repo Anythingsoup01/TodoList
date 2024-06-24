@@ -2,12 +2,10 @@
 
 int main(int argc, char** argv)
 {
-	std::vector<std::string> tasks = OpenFile(tasks);
+	std::vector<std::string> tasks = OpenFile();
 
-	int taskCount = (int)tasks.size();
-
-	int option = -1;
-	while (option != 0)
+	int opt = -1;
+	while (opt != 0)
 	{
 		system("cls");
 		print("---- TO DO LIST ----");
@@ -15,9 +13,9 @@ int main(int argc, char** argv)
 		print("2 - View Tasks");
 		print("3 - Delete Tasks");
 		print("0 - Terminate Program");
-		std::cin >> option;
+		std::cin >> opt;
 
-		switch (option)
+		switch (opt)
 		{
 		case 0:
 		{
@@ -25,21 +23,20 @@ int main(int argc, char** argv)
 			break;
 		}
 		case 1:
-			system("cls");
-			tasks.push_back(AddTask(tasks, taskCount));
-			taskCount = (int)tasks.size();
+		{
+			tasks.push_back(AddTask(tasks));
 			break;
+		}
 		case 2:
-			system("cls");
-			PrintTasks(tasks, taskCount);
-			Sleep(5000);
+		{
+			PrintTasks(tasks);
+			Sleep(2500);
 			break;
+		}
 		case 3:
-			system("cls");
-			taskCount = DeleteTask(tasks, taskCount);
+			tasks = DeleteTask(tasks);
 			break;
 		}
 	}
-
 	return 0;
 }

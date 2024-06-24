@@ -7,32 +7,27 @@
 
 #define print(...) std::cout << __VA_ARGS__ << std::endl
 
-std::string AddTask(std::vector<std::string> tasks, int taskCount)
+std::string AddTask(std::vector<std::string> tasks)
 {
+	system("cls");
 	std::string text;
-	if (taskCount > 9)
-	{
-		print("--- TASK LIST IS FULL ---");
-		Sleep(1000);
-		system("cls");
-		return std::string();
-	}
 	print("Enter A New Task: ");
 	std::cin.ignore();
 	std::getline(std::cin, text);
 	return text;
 }
 
-bool PrintTasks(std::vector<std::string> tasks, int taskCount)
+bool PrintTasks(std::vector<std::string> tasks)
 {
-	if (taskCount > 0) {
+	system("cls");
+	if ((int)tasks.size() > 0) {
 		print("Tasks To Do");
 		print("----------------------");
 		int s = 0;
 		for (auto i : tasks)
 		{
 			s++;
-			print("Task: "<<s<< " : " << i);
+			print("Task: " << s << " : " << i);
 		}
 		print("----------------------");
 	}
@@ -44,12 +39,12 @@ bool PrintTasks(std::vector<std::string> tasks, int taskCount)
 	return true;
 }
 
-int DeleteTask(std::vector<std::string> tasks, int taskCount)
+std::vector<std::string> DeleteTask(std::vector<std::string> tasks)
 {
-	if (!PrintTasks(tasks, taskCount))
+	if (!PrintTasks(tasks))
 	{
 		Sleep(2500);
-		return taskCount;
+		return tasks;
 	}
 	int input = 0;
 	print("Enter a task to delete: #");
@@ -58,13 +53,23 @@ int DeleteTask(std::vector<std::string> tasks, int taskCount)
 	if (input < 0 || input > 9)
 	{
 		print("Invalid Task ID!");
-		return taskCount;
+		return tasks;
 	}
-	for (int i = input - 1; i < taskCount; i++)
+	int s = 0;
+
+	for (auto i : tasks)
 	{
-		tasks[i] = tasks[i + 1];
+		if (s == input - 1)
+		{
+			auto it = std::find(tasks.begin(), tasks.end(), i);
+			if (it != tasks.end()) {
+				tasks.erase(it);
+			}
+		}
+		s++;
 	}
-	return taskCount - 1;
+
+	return tasks;
 }
 
 void SaveFile(std::vector<std::string> tasks)
@@ -84,10 +89,9 @@ void SaveFile(std::vector<std::string> tasks)
 	outfile.close();
 }
 
-std::vector<std::string> OpenFile(std::vector<std::string> tasks) {
-
-	int size = sizeof(tasks) / sizeof(tasks[0]);
-	// Opening the file in read mode 
+std::vector<std::string> OpenFile()
+{
+	std::vector<std::string> tasks;
 
 	std::ifstream infile("tasks.txt");
 
@@ -96,12 +100,10 @@ std::vector<std::string> OpenFile(std::vector<std::string> tasks) {
 		return std::vector<std::string>();
 	}
 
-	// Reading the array elements from the file 
 	std::string str;
 	while (infile >> str)
 		tasks.push_back(str);
 
-	// Closing the file 
 	infile.close();
 	return tasks;
 }
